@@ -1,0 +1,7 @@
+#requirements.txt File
+#This file contains a list of Python libraries and their respective versions that are required for running this Sequence Analysis Tool. These dependencies have been specified to ensure the correct functioning of the tool. To install these dependencies, please use the following command:
+
+biopython==1.79
+mysql-connector-python==8.0.28
+matplotlib==3.4.3
+numpy==1.24.3
