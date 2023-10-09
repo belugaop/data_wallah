@@ -9,10 +9,10 @@ from gc_calculator import GCCalculator
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
-class BioinformaticsApp:
+class belugaApp:
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("Bioinformatics App")
+        self.root.title("beluga App")
         self.root.geometry("800x600")
 
         # Initialize the Sequence Analyzer, Sequence Aligner, Sequence Database, Blast Integration, and GC Calculator
@@ -55,7 +55,7 @@ class BioinformaticsApp:
 
         # Set up the PDF content
         c.setFont("Helvetica", 12)
-        c.drawString(100, height - 100, "Bioinformatics Analysis Result")
+        c.drawString(100, height - 100, "beluga Analysis Result")
         c.drawString(100, height - 120, "-----------------------------------------")
 
         # Write the analysis result to the PDF
@@ -70,5 +70,5 @@ class BioinformaticsApp:
     # ... Other methods ...
 
 if __name__ == "__main__":
-    app = BioinformaticsApp()
+    app = belugaApp()
     app.root.mainloop()
