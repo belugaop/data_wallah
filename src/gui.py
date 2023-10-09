@@ -1,36 +1,28 @@
 import tkinter as tk
 from tkinter import filedialog
 
-class SequenceAnalysisGUI:
-    def __init__(self, root):
-        self.root = root
+class SequenceAnalyzer:
+    def __init__(self):
+        self.root = tk.Tk()
         self.root.title("Sequence Analysis Tool")
         self.root.geometry("800x600")
 
-        # Create a Help button
+        self.create_gui_elements()
+
+    def create_gui_elements(self):
         self.create_help_button()
-
-        # Display "Hello [Name]" (replace [Name] with the user's name)
-        user_name = "John"  # Replace with the actual user's name
-        self.create_hello_label(user_name)
-
-        # Input fields for sequence entry
+        self.create_hello_label()
         self.create_sequence_input()
-
-        # Alignment button
         self.create_alignment_button()
-
-        # Load Sequence button
         self.create_load_button()
-
-        # Result display
         self.create_result_display()
 
     def create_help_button(self):
         help_button = tk.Button(self.root, text="Help", command=self.show_help)
         help_button.pack(pady=10)
 
-    def create_hello_label(self, user_name):
+    def create_hello_label(self):
+        user_name = "John"  # Replace with the actual user's name
         hello_label = tk.Label(self.root, text=f"Hello {user_name}", font=("Helvetica", 14))
         hello_label.pack()
 
@@ -72,10 +64,9 @@ class SequenceAnalysisGUI:
                 self.sequence_entry.delete("1.0", tk.END)  # Clear previous sequences
                 self.sequence_entry.insert(tk.END, file.read())
 
-def run_gui():
-    root = tk.Tk()
-    app = SequenceAnalysisGUI(root)
-    root.mainloop()
+    def run(self):
+        self.root.mainloop()
 
 if __name__ == "__main__":
-    run_gui()
+    analyzer = SequenceAnalyzer()
+    analyzer.run()
