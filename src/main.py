@@ -30,30 +30,52 @@ class BioinformaticsApp:
         self.sequence_analyzer.run()
 
     def perform_alignment(self):
-        sequence = self.sequence_analyzer.sequence_entry.get("1.0", "end-1c")
-        alignment_result = self.sequence_aligner.align_sequences(sequence, "Reference Sequence")
-        self.sequence_analyzer.result_text.delete(1.0, tk.END)
-        self.sequence_analyzer.result_text.insert(tk.END, alignment_result)
+        try:
+            sequence = self.sequence_analyzer.sequence_entry.get("1.0", "end-1c")
+            alignment_result = self.sequence_aligner.align_sequences(sequence, "Reference Sequence")
+            self.sequence_analyzer.result_text.delete(1.0, tk.END)
+            self.sequence_analyzer.result_text.insert(tk.END, alignment_result)
+        except Exception as e:
+            self.display_error_message(f"An error occurred during alignment: {str(e)}")
 
     def load_sequence_file(self):
-        file_path = filedialog.askopenfilename(filetypes=[("Sequence Files", "*.fasta *.txt")])
-        if file_path:
-            with open(file_path, "r") as file:
-                sequence = file.read()
-                self.sequence_analyzer.sequence_entry.delete("1.0", tk.END)
-                self.sequence_analyzer.sequence_entry.insert(tk.END, sequence)
+        try:
+            file_path = filedialog.askopenfilename(filetypes=[("Sequence Files", "*.fasta *.txt")])
+            if file_path:
+                with open(file_path, "r") as file:
+                    sequence = file.read()
+                    self.sequence_analyzer.sequence_entry.delete("1.0", tk.END)
+                    self.sequence_analyzer.sequence_entry.insert(tk.END, sequence)
+        except Exception as e:
+            self.display_error_message(f"An error occurred while loading the sequence file: {str(e)}")
 
     def run_blast(self):
-        sequence = self.sequence_analyzer.sequence_entry.get("1.0", "end-1c")
-        blast_result = self.blast_integration.run_blast(sequence)
-        self.sequence_analyzer.result_text.delete(1.0, tk.END)
-        self.sequence_analyzer.result_text.insert(tk.END, blast_result)
+        try:
+            sequence = self.sequence_analyzer.sequence_entry.get("1.0", "end-1c")
+            blast_result = self.blast_integration.run_blast(sequence)
+            self.sequence_analyzer.result_text.delete(1.0, tk.END)
+            self.sequence_analyzer.result_text.insert(tk.END, blast_result)
+        except Exception as e:
+            self.display_error_message(f"An error occurred during BLAST: {str(e)}")
 
     def calculate_gc_content(self):
-        sequence = self.sequence_analyzer.sequence_entry.get("1.0", "end-1c")
-        gc_content = self.gc_calculator.calculate_gc_content(sequence)
-        self.sequence_analyzer.result_text.delete(1.0, tk.END)
-        self.sequence_analyzer.result_text.insert(tk.END, f"GC Content: {gc_content:.2f}%")
+        try:
+            sequence = self.sequence_analyzer.sequence_entry.get("1.0", "end-1c")
+            gc_content = self.gc_calculator.calculate_gc_content(sequence)
+            self.sequence_analyzer.result_text.delete(1.0, tk.END)
+            self.sequence_analyzer.result_text.insert(tk.END, f"GC Content: {gc_content:.2f}%")
+        except Exception as e:
+            self.display_error_message(f"An error occurred while calculating GC content: {str(e)}")
+
+    def display_error_message(self, error_message):
+        # Display an error message dialog to the user
+        error_dialog = tk.Toplevel(self.root)
+        error_dialog.title("Error")
+        error_dialog.geometry("300x100")
+        error_label = tk.Label(error_dialog, text=error_message)
+        error_label.pack()
+        ok_button = tk.Button(error_dialog, text="OK", command=error_dialog.destroy)
+        ok_button.pack()
 
 if __name__ == "__main__":
     app = BioinformaticsApp()
