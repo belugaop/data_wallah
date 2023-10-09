@@ -5,7 +5,7 @@
 tkinter>=8.6
 
 # Bioinformatics and sequence analysis
-biopython>=1.78
+biopython==1.79
 
 # BLAST integration (not in final but thinking lets see)
 biopython-blast>=1.78
