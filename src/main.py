@@ -6,6 +6,8 @@ from sequence_alignment import SequenceAligner
 from database_access import SequenceDatabase
 from blast_integration import BlastIntegration
 from gc_calculator import GCCalculator
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
 class BioinformaticsApp:
     def __init__(self):
@@ -25,57 +27,47 @@ class BioinformaticsApp:
         self.sequence_analyzer.load_button.config(command=self.load_sequence_file)
         self.sequence_analyzer.blast_button.config(command=self.run_blast)
         self.sequence_analyzer.gc_button.config(command=self.calculate_gc_content)
+        self.sequence_analyzer.export_pdf_button.config(command=self.export_as_pdf)
 
         # Run the GUI
         self.sequence_analyzer.run()
 
-    def perform_alignment(self):
+    # ... Other methods ...
+
+    def export_as_pdf(self):
         try:
             sequence = self.sequence_analyzer.sequence_entry.get("1.0", "end-1c")
-            alignment_result = self.sequence_aligner.align_sequences(sequence, "Reference Sequence")
-            self.sequence_analyzer.result_text.delete(1.0, tk.END)
-            self.sequence_analyzer.result_text.insert(tk.END, alignment_result)
-        except Exception as e:
-            self.display_error_message(f"An error occurred during alignment: {str(e)}")
+            analysis_result = self.get_analysis_result(sequence)
 
-    def load_sequence_file(self):
-        try:
-            file_path = filedialog.askopenfilename(filetypes=[("Sequence Files", "*.fasta *.txt")])
+            # Ask the user for a PDF file path to save the analysis result
+            file_path = filedialog.asksaveasfilename(defaultextension=".pdf", filetypes=[("PDF Files", "*.pdf")])
             if file_path:
-                with open(file_path, "r") as file:
-                    sequence = file.read()
-                    self.sequence_analyzer.sequence_entry.delete("1.0", tk.END)
-                    self.sequence_analyzer.sequence_entry.insert(tk.END, sequence)
-        except Exception as e:
-            self.display_error_message(f"An error occurred while loading the sequence file: {str(e)}")
+                # Generate the PDF file
+                self.create_pdf(file_path, analysis_result)
 
-    def run_blast(self):
-        try:
-            sequence = self.sequence_analyzer.sequence_entry.get("1.0", "end-1c")
-            blast_result = self.blast_integration.run_blast(sequence)
-            self.sequence_analyzer.result_text.delete(1.0, tk.END)
-            self.sequence_analyzer.result_text.insert(tk.END, blast_result)
         except Exception as e:
-            self.display_error_message(f"An error occurred during BLAST: {str(e)}")
+            self.display_error_message(f"An error occurred while exporting as PDF: {str(e)}")
 
-    def calculate_gc_content(self):
-        try:
-            sequence = self.sequence_analyzer.sequence_entry.get("1.0", "end-1c")
-            gc_content = self.gc_calculator.calculate_gc_content(sequence)
-            self.sequence_analyzer.result_text.delete(1.0, tk.END)
-            self.sequence_analyzer.result_text.insert(tk.END, f"GC Content: {gc_content:.2f}%")
-        except Exception as e:
-            self.display_error_message(f"An error occurred while calculating GC content: {str(e)}")
+    def create_pdf(self, file_path, analysis_result):
+        # Create a PDF file using ReportLab
+        c = canvas.Canvas(file_path, pagesize=letter)
+        width, height = letter
 
-    def display_error_message(self, error_message):
-        # Display an error message dialog to the user
-        error_dialog = tk.Toplevel(self.root)
-        error_dialog.title("Error")
-        error_dialog.geometry("300x100")
-        error_label = tk.Label(error_dialog, text=error_message)
-        error_label.pack()
-        ok_button = tk.Button(error_dialog, text="OK", command=error_dialog.destroy)
-        ok_button.pack()
+        # Set up the PDF content
+        c.setFont("Helvetica", 12)
+        c.drawString(100, height - 100, "Bioinformatics Analysis Result")
+        c.drawString(100, height - 120, "-----------------------------------------")
+
+        # Write the analysis result to the PDF
+        y_position = height - 150
+        for line in analysis_result.split('\n'):
+            c.drawString(100, y_position, line)
+            y_position -= 20
+
+        # Save and close the PDF file
+        c.save()
+
+    # ... Other methods ...
 
 if __name__ == "__main__":
     app = BioinformaticsApp()
