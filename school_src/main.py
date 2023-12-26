@@ -133,7 +133,7 @@ def main():
             break
 
         else:
-            print("\nInvalid choice. Please enter a number between 1 and 7.")
+            print("\n Invalid choice. Please enter a number between 1 and 7.")
             print_separator()
             continue
 
